@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syosetsu_reader/infrastracture/database.dart';
 import 'package:syosetsu_reader/model/db_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class BookshelfView extends ConsumerWidget {
   BookshelfView({super.key});
@@ -38,8 +39,8 @@ class BookshelfView extends ConsumerWidget {
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(dataBaseConnectionProviderNotifier
-                        .books[index].author));
+                    subtitle: Text(
+                        '${dataBaseConnectionProviderNotifier.books[index].author} 更新日:${DateFormat('yyyy年MM月dd日').format(dataBaseConnectionProviderNotifier.books[index].novel_update_date)}'));
               },
             );
           }),

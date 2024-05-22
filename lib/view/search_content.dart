@@ -106,6 +106,7 @@ class BookList {
   static List<BookData> bookData = [];
 
   static Future<void> getRanking(uri) async {
+    debugPrint(uri);
     bookData.clear();
     final rankResponse = await http.get(Uri.parse(uri));
     Map<String, String> rankList = {};
