@@ -36,6 +36,20 @@ class SearchFilteringViewState extends ConsumerState<SearchFilteringView> {
   bool searchOtherReplay = false;
   bool searchOtherOther = false;
   bool searchNongenre = false;
+  bool searchR15 = false;
+  bool searchBl = false;
+  bool searchGl = false;
+  bool searchZankoku = false;
+  bool searchTensei = false;
+  bool searchTenni = false;
+  bool searchTt = false;
+  bool exclusionR15 = false;
+  bool exclusionBl = false;
+  bool exclusionGl = false;
+  bool exclusionZankoku = false;
+  bool exclusionTensei = false;
+  bool exclusionTenni = false;
+  bool exclusionTt = false;
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +261,155 @@ class SearchFilteringViewState extends ConsumerState<SearchFilteringView> {
             ],
           )
         ],
-      )
+      ),
+      Column(
+        children: [
+          const Text(InfomationText.searchLavel,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          Wrap(
+            children: [
+              _textCheckbox(
+                  NovelNarouLavel.r15,
+                  searchR15,
+                  (value) => setState(() {
+                        searchR15 = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.bl,
+                  searchBl,
+                  (value) => setState(() {
+                        searchBl = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.gl,
+                  searchGl,
+                  (value) => setState(() {
+                        searchGl = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.zankoku,
+                  searchZankoku,
+                  (value) => setState(() {
+                        searchZankoku = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.tensei,
+                  searchTensei,
+                  (value) => setState(() {
+                        searchTensei = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.tenni,
+                  searchTenni,
+                  (value) => setState(() {
+                        searchTenni = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.tt,
+                  searchTt,
+                  (value) => setState(() {
+                        searchTt = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+            ],
+          )
+        ],
+      ),
+      Column(
+        children: [
+          const Text(InfomationText.exclusionLavel,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          Wrap(
+            children: [
+              _textCheckbox(
+                  NovelNarouLavel.r15,
+                  exclusionR15,
+                  (value) => setState(() {
+                        exclusionR15 = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.bl,
+                  exclusionBl,
+                  (value) => setState(() {
+                        exclusionBl = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.gl,
+                  exclusionGl,
+                  (value) => setState(() {
+                        exclusionGl = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.zankoku,
+                  exclusionZankoku,
+                  (value) => setState(() {
+                        exclusionZankoku = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.tensei,
+                  exclusionTensei,
+                  (value) => setState(() {
+                        exclusionTensei = value!;
+                        if (exclusionR15) {
+                          exclusionR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.tenni,
+                  exclusionTenni,
+                  (value) => setState(() {
+                        exclusionTenni = value!;
+                        if (searchR15) {
+                          searchR15 = false;
+                        }
+                      })),
+              _textCheckbox(
+                  NovelNarouLavel.tt,
+                  exclusionTt,
+                  (value) => setState(() {
+                        exclusionTt = value!;
+                        if (searchR15) {
+                          searchR15 = false;
+                        }
+                      })),
+            ],
+          )
+        ],
+      ),
     ]));
   }
 

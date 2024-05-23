@@ -3,6 +3,8 @@ class InfomationText {
   static const String exclusionWord = '検索除外単語';
   static const String searchBiggenre = '大ジャンル指定';
   static const String searchGenre = 'ジャンル指定';
+  static const String searchLavel = '要素指定';
+  static const String exclusionLavel = '要素除外';
 }
 
 class Biggenre {
@@ -93,6 +95,16 @@ class Genre {
     'name': 'ノンジャンル〔ノンジャンル〕',
     'code': '9801'
   };
+}
+
+class NovelNarouLavel {
+  static const String r15 = 'R15';
+  static const String bl = 'ボーイズラブ';
+  static const String gl = 'ガールズラブ';
+  static const String zankoku = '残酷な描写あり';
+  static const String tensei = '異世界転生';
+  static const String tenni = '異世界転移';
+  static const String tt = '異世界(転生|転移)';
 }
 
 class ErrorText {
