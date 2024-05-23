@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syosetsu_reader/constant/novel.dart';
-import 'search_content.dart';
+import 'package:syosetsu_reader/importer.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
@@ -18,7 +17,7 @@ class SearchView extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (BuildContext context) => index == 0
-                          ? SearchRankingView(typeId: index)
+                          ? SearchFilteringView()
                           : SearchRankingView(typeId: index)),
                 ),
               },

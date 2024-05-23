@@ -13,8 +13,9 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
   @override
   Future<List<Map>> build() async {
     try {
-      if (state.isLoading || !database.isOpen) {
+      if (state.isLoading) {
         var databasesPath = await getDatabasesPath();
+        debugPrint(databasesPath);
         path = '$databasesPath/bookshelf.db';
         database = await openDatabase(path, version: 1,
             onCreate: (Database db, int version) async {
