@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syosetsu_reader/infrastracture/database.dart';
-import 'package:syosetsu_reader/model/db_model.dart';
+import 'package:syosetsu_reader/importer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -24,7 +23,7 @@ class BookshelfView extends ConsumerWidget {
 
             if (snapshot.error != null) {
               debugPrint(snapshot.error.toString());
-              return const Center(child: Text('エラーがおきました'));
+              return Center(child: Text(ErrorText.defaultError()));
             }
             return ListView.builder(
               itemCount: dataBaseConnectionProviderNotifier.books.length,

@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sqflite:
+  path:
+  universal_html:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,8 +43,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  sqflite:
-  path:
   flutter_riverpod:
   intl:
 
@@ -62,6 +63,47 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: NotoSerifJP
+      fonts:
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-Light.ttf
+          weight: 300
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/NotoSerifJP/NotoSerifJP-Black.ttf
+          weight: 900
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Light.ttf
+          weight: 300
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/NotoSansJP/NotoSansJP-Black.ttf
+          weight: 900
+
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

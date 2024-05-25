@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syosetsu_reader/infrastracture/database.dart';
-import 'view/bookshelf.dart';
-import 'view/search.dart';
+import 'package:syosetsu_reader/importer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
@@ -22,9 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '小説リーダー',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+          fontFamily: 'NotoSansJP'),
       home: const MainWidget(),
     );
   }
@@ -64,7 +62,7 @@ class _MainWidgetState extends ConsumerState<MainWidget> {
 
               if (snapshot.error != null) {
                 debugPrint(snapshot.error.toString());
-                return const Center(child: Text('エラーがおきました'));
+                return Center(child: Text(ErrorText.defaultError()));
               }
               return _screens[_selectedIndex];
             }),
