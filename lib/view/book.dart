@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:syosetsu_reader/importer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SearchRankingView extends ConsumerWidget {
-  final int typeId;
+class StoryListView extends ConsumerWidget {
+  final BookData bookData;
   late DatabaseConnection dataBaseConnectionProviderNotifier;
 
-  SearchRankingView({super.key, required this.typeId});
+  StoryListView({super.key, required this.bookData});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     dataBaseConnectionProviderNotifier =
         ref.watch(databaseConnectionProvider.notifier);
-    BookListAssignedRanking bookList = BookListAssignedRanking();
+    Novel novelData = Novel();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text(SearchType.searchType[typeId]!),
+        title: Text(bookData.title),
       ),
       body: FutureBuilder(
-          future: bookList.getRankingScraping(getRankingURL()),
+          future: novelData.getNovelTop(
+              '${URL.novelUrl}/${bookData.ncode}', bookData.storyLength),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -32,24 +33,17 @@ class SearchRankingView extends ConsumerWidget {
             }
 
             return ListView.builder(
-              itemCount: bookList.bookData.length,
+              itemCount: novelData.storyData.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                    onTap: () => {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    StoryListView(
-                                        bookData: bookList.bookData[index])),
-                          ),
-                        },
+                    onTap: () {
+                      debugPrint(novelData.storyData[index].title);
+                    },
                     title: Text(
-                      bookList.bookData[index].outputTitle,
+                      '${novelData.storyData[index].storyNumber}: ${novelData.storyData[index].title}',
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                        '${bookList.bookData[index].author}\n${bookList.bookData[index].end == 0 ? '完結済み' : '連載中'} 全${bookList.bookData[index].storyLength}話'));
+                    ));
               },
             );
           }),
@@ -73,33 +67,5 @@ class SearchRankingView extends ConsumerWidget {
           update_date: now);
       dataBaseConnectionProviderNotifier.insertBook(book);
     }
-  }
-
-  String getRankingURL() {
-    String result;
-    switch (typeId) {
-      case 1:
-        result = GetUrl.dayRankingURL();
-        break;
-      case 2:
-        result = GetUrl.weekRankingURL();
-        break;
-      case 3:
-        result = GetUrl.monthRankingURL();
-        break;
-      case 4:
-        result = GetUrl.quoteRankingURL();
-        break;
-      case 5:
-        result = GetUrl.yearRankingURL();
-        break;
-      case 6:
-        result = GetUrl.totalRankingURL();
-        break;
-      default:
-        result = GetUrl.dayRankingURL();
-        break;
-    }
-    return result;
   }
 }

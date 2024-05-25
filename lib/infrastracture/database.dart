@@ -57,6 +57,7 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
   }
 
   Future<void> insertBook(Book book) async {
+    ncodeList.add(book.ncode);
     await database.insert(
       'Book',
       {

@@ -1,9 +1,14 @@
 export 'package:syosetsu_reader/constant/novel.dart';
 export 'package:syosetsu_reader/constant/text.dart';
+export 'package:syosetsu_reader/constant/url.dart';
 export 'package:syosetsu_reader/infrastracture/database.dart';
 export 'package:syosetsu_reader/model/db_model.dart';
 export 'package:syosetsu_reader/model/api_model.dart';
+export 'package:syosetsu_reader/model/internal_data.dart';
 export 'package:syosetsu_reader/view/bookshelf.dart';
 export 'package:syosetsu_reader/view/filtering_search.dart';
 export 'package:syosetsu_reader/view/ranking_search.dart';
-export 'package:syosetsu_reader/view/search.dart';
+export 'package:syosetsu_reader/view/search_result.dart';
+export 'package:syosetsu_reader/view/search_list.dart';
+export 'package:syosetsu_reader/view/book.dart';
+export 'package:syosetsu_reader/utils/functions.dart';

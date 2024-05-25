@@ -1,110 +1,96 @@
 class InfomationText {
-  static const String searchWord = '検索単語';
-  static const String exclusionWord = '検索除外単語';
+  static const String searchWordTitle = 'ワード指定';
+  static const String searchWord = '検索ワード';
+  static const String exclusionWord = '除外ワード';
   static const String searchBiggenre = '大ジャンル指定';
   static const String searchGenre = 'ジャンル指定';
   static const String searchLavel = '要素指定';
   static const String exclusionLavel = '要素除外';
 }
 
-class Biggenre {
-  static const Map<String, String> love = {'name': '恋愛', 'code': '1'};
-  static const Map<String, String> fantasy = {'name': 'ファンタジー', 'code': '2'};
-  static const Map<String, String> literature = {'name': '文芸', 'code': '3'};
-  static const Map<String, String> sciencefantasy = {'name': 'SF', 'code': '4'};
-  static const Map<String, String> other = {'name': 'その他', 'code': '99'};
-  static const Map<String, String> nongenre = {'name': 'ノンジャンル', 'code': '98'};
+enum Biggenre {
+  love(displayName: '恋愛', genreCode: '1'),
+  fantasy(displayName: 'ファンタジー', genreCode: '2'),
+  literature(displayName: '文芸', genreCode: '3'),
+  sciencefantasy(displayName: 'SF', genreCode: '4'),
+  other(displayName: 'その他', genreCode: '99'),
+  nongenre(displayName: 'ノンジャンル', genreCode: '98');
+
+  final String displayName;
+  final String genreCode;
+
+  const Biggenre({required this.displayName, required this.genreCode});
 }
 
-class Genre {
-  static const Map<String, String> loveAnotherWorld = {
-    'name': '異世界〔恋愛〕',
-    'code': '101'
-  };
-  static const Map<String, String> loveRealWorld = {
-    'name': '現実世界〔恋愛〕',
-    'code': '102'
-  };
-  static const Map<String, String> fantasyHighfantasy = {
-    'name': 'ハイファンタジー〔ファンタジー〕',
-    'code': '201'
-  };
-  static const Map<String, String> fantasyLowfantasy = {
-    'name': 'ローファンタジー〔ファンタジー〕',
-    'code': '202'
-  };
-  static const Map<String, String> literaturePureliterature = {
-    'name': '純文学〔文芸〕',
-    'code': '301'
-  };
-  static const Map<String, String> literatureHumandrama = {
-    'name': 'ヒューマンドラマ〔文芸〕',
-    'code': '302'
-  };
-  static const Map<String, String> literatureHistory = {
-    'name': '歴史〔文芸〕',
-    'code': '303'
-  };
-  static const Map<String, String> literatureMistery = {
-    'name': '推理〔文芸〕',
-    'code': '304'
-  };
-  static const Map<String, String> literatureHorror = {
-    'name': 'ホラー〔文芸〕',
-    'code': '305'
-  };
-  static const Map<String, String> literatureAction = {
-    'name': 'アクション〔文芸〕',
-    'code': '306'
-  };
-  static const Map<String, String> literatureComedy = {
-    'name': 'コメディー〔文芸〕',
-    'code': '307'
-  };
-  static const Map<String, String> sfVrgame = {
-    'name': 'VRゲーム〔SF〕',
-    'code': '401'
-  };
-  static const Map<String, String> sfSpace = {'name': '宇宙〔SF〕', 'code': '402'};
-  static const Map<String, String> sfFantasyscience = {
-    'name': '空想科学〔SF〕',
-    'code': '403'
-  };
-  static const Map<String, String> sfPanic = {
-    'name': 'パニック〔SF〕',
-    'code': '404'
-  };
-  static const Map<String, String> otherFairytale = {
-    'name': '童話〔その他〕',
-    'code': '9901'
-  };
-  static const Map<String, String> otherPoem = {
-    'name': '詩〔その他〕',
-    'code': '9902'
-  };
-  static const Map<String, String> otherEssay = {
-    'name': 'エッセイ〔その他〕',
-    'code': '9903'
-  };
-  static const Map<String, String> otherReplay = {
-    'name': 'リプレイ〔その他〕',
-    'code': '9904'
-  };
-  static const Map<String, String> other = {'name': 'その他〔その他〕', 'code': '9999'};
-  static const Map<String, String> nongenre = {
-    'name': 'ノンジャンル〔ノンジャンル〕',
-    'code': '9801'
-  };
+enum Genre {
+  loveAnotherWorld(
+      displayName: '異世界〔恋愛〕', genreCode: '101', link: Biggenre.love),
+  loveRealWorld(displayName: '現実世界〔恋愛〕', genreCode: '102', link: Biggenre.love),
+  fantasyHighfantasy(
+      displayName: 'ハイファンタジー〔ファンタジー〕',
+      genreCode: '201',
+      link: Biggenre.fantasy),
+  fantasyLowfantasy(
+      displayName: 'ローファンタジー〔ファンタジー〕',
+      genreCode: '202',
+      link: Biggenre.fantasy),
+  literaturePureliterature(
+      displayName: '純文学〔文芸〕', genreCode: '301', link: Biggenre.literature),
+  literatureHumandrama(
+      displayName: 'ヒューマンドラマ〔文芸〕', genreCode: '302', link: Biggenre.literature),
+  literatureHistory(
+      displayName: '歴史〔文芸〕', genreCode: '303', link: Biggenre.literature),
+  literatureMistery(
+      displayName: '推理〔文芸〕', genreCode: '304', link: Biggenre.literature),
+  literatureHorror(
+      displayName: 'ホラー〔文芸〕', genreCode: '305', link: Biggenre.literature),
+  literatureAction(
+      displayName: 'アクション〔文芸〕', genreCode: '306', link: Biggenre.literature),
+  literatureComedy(
+      displayName: 'コメディー〔文芸〕', genreCode: '307', link: Biggenre.literature),
+  sfVrgame(
+      displayName: 'VRゲーム〔SF〕',
+      genreCode: '401',
+      link: Biggenre.sciencefantasy),
+  sfSpace(
+      displayName: '宇宙〔SF〕', genreCode: '402', link: Biggenre.sciencefantasy),
+  sfFantasyscience(
+      displayName: '空想科学〔SF〕', genreCode: '403', link: Biggenre.sciencefantasy),
+  sfPanic(
+      displayName: 'パニック〔SF〕', genreCode: '404', link: Biggenre.sciencefantasy),
+  otherFairytale(
+      displayName: '童話〔その他〕', genreCode: '9901', link: Biggenre.other),
+  otherPoem(displayName: '詩〔その他〕', genreCode: '9902', link: Biggenre.other),
+  otherEssay(displayName: 'エッセイ〔その他〕', genreCode: '9903', link: Biggenre.other),
+  otherReplay(
+      displayName: 'リプレイ〔その他〕', genreCode: '9904', link: Biggenre.other),
+  other(displayName: 'その他〔その他〕', genreCode: '9999', link: Biggenre.other),
+  nongenre(
+      displayName: 'ノンジャンル〔ノンジャンル〕',
+      genreCode: '9801',
+      link: Biggenre.nongenre);
+
+  final String displayName;
+  final String genreCode;
+  final Biggenre link;
+
+  const Genre(
+      {required this.displayName, required this.genreCode, required this.link});
 }
 
-class NovelNarouLavel {
-  static const String r15 = 'R15';
-  static const String bl = 'ボーイズラブ';
-  static const String gl = 'ガールズラブ';
-  static const String zankoku = '残酷な描写あり';
-  static const String tensei = '異世界転生';
-  static const String tenni = '異世界転移';
-  static const String tt = '異世界(転生|転移)';
+enum NarouLavel {
+  r15(displayName: 'R15', paramCode: 'r15'),
+  bl(displayName: 'ボーイズラブ', paramCode: 'bl'),
+  gl(displayName: 'ガールズラブ', paramCode: 'gl'),
+  zankoku(displayName: '残酷な描写あり', paramCode: 'zankoku'),
+  tensei(displayName: '異世界転生', paramCode: 'tensei'),
+  tenni(displayName: '異世界転移', paramCode: 'tanni'),
+  tt(displayName: '異世界(転生|転移)', paramCode: 'tt');
+
+  final String displayName;
+  final String paramCode;
+
+  const NarouLavel({required this.displayName, required this.paramCode});
 }
 
 class ErrorText {
