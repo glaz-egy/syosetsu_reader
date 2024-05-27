@@ -20,7 +20,7 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
         database = await openDatabase(path, version: 1,
             onCreate: (Database db, int version) async {
           await db.execute(
-              'CREATE TABLE Book (id INTEGER PRIMARY KEY AUTOINCREMENT, ncode TEXT, title TEXT, author TEXT, is_download TEXT, novel_create_date TEXT, novel_update_date TEXT, create_date TEXT, update_date TEXT)');
+              'CREATE TABLE Book (id INTEGER PRIMARY KEY AUTOINCREMENT, ncode TEXT, title TEXT, author TEXT, novel_type INTEGER, is_download TEXT, novel_create_date TEXT, novel_update_date TEXT, create_date TEXT, update_date TEXT)');
           await db.execute(
               'CREATE TABLE story (id INTEGER PRIMARY KEY AUTOINCREMENT, book_id INTEGER, content TEXT, is_download INTEGER, create_date TEXT, update_date TEXT)');
           await db.execute(
@@ -47,6 +47,7 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
             ncode: row['ncode'],
             title: row['title'],
             author: row['author'],
+            novelType: row['novel_type'],
             is_download: bool.parse(row['is_download']),
             novel_create_date: DateTime.parse(row['novel_create_date']),
             novel_update_date: DateTime.parse(row['novel_update_date']),
@@ -64,6 +65,7 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
         'title': book.title,
         'ncode': book.ncode,
         'author': book.author,
+        'novel_type': book.novelType,
         'is_download': book.is_download.toString(),
         'novel_create_date': book.novel_create_date.toString(),
         'novel_update_date': book.novel_update_date.toString(),

@@ -8,14 +8,7 @@ class BookList {
     debugPrint(uri);
 
     try {
-      String ncodeJoin = '';
-      dynamic jsonData = await APIUtil.fetchApi(uri);
-
-      jsonData = await APIUtil.fetchApi(
-          '${URL.bookUrl}&ncode=${ncodeJoin.toLowerCase()}');
-      jsonData.removeAt(0);
-      jsonData
-          .forEach((json) => bookData.add(BookData.fromJson(json, '', false)));
+      bookData = await APIUtil.getBookData(uri);
     } catch (e) {
       rethrow;
     }
@@ -40,8 +33,8 @@ class BookListAssignedRanking {
       jsonData = await APIUtil.fetchApi(
           '${URL.bookUrl}&ncode=${ncodeJoin.toLowerCase()}');
       jsonData.removeAt(0);
-      jsonData.forEach((json) => bookData
-          .add(BookData.fromJson(json, rankList['${json["ncode"]}']!, true)));
+      jsonData.forEach((json) => bookData.add(BookData.fromJson(
+          json, rankList['${json["ncode"].toLowerCase()}']!, true)));
       bookData.sort((a, b) => int.parse(a.rank).compareTo(int.parse(b.rank)));
     } catch (e) {
       rethrow;
@@ -72,16 +65,47 @@ class BookListAssignedRanking {
 }
 
 class Novel {
-  List<StoryListData> storyData = [];
+  final String ncode;
+  List<StoryListData> storyListData = [];
+  Novel({required this.ncode});
+  Map<String, String> storyData = {};
+  int storyLength = 0;
 
-  Future<void> getNovelTop(url, int storyLength) async {
-    debugPrint(url);
+  Future<void> getNovelTop() async {
+    debugPrint(ncode);
 
     try {
-      storyData = await ScrapUtil.getStoryList(url, storyLength);
+      BookData bookData = await APIUtil.getBookData(
+          '${URL.bookUrl}&ncode=${ncode.toLowerCase()}');
+
+      storyLength = bookData.storyLength;
+      if (storyLength > 1) {
+        storyListData = await ScrapUtil.getStoryList(
+            '${URL.novelUrl}/${bookData.ncode}', bookData.storyLength);
+      }
     } catch (e) {
       debugPrint('Novel: ${e.toString()}');
       rethrow;
+    }
+  }
+
+  Future<void> getStory(String storyNumber) async {
+    debugPrint(storyNumber);
+
+    try {
+      /*final response = await http
+          .get(Uri.parse('${URL.novelUrl}/$ncode/$storyNumber'), headers: {
+        'User-Agent':
+            'Mozilla/5.0 (X11; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'
+      });*/
+      if (storyNumber == '0') {
+        storyData['0'] = await ScrapUtil.getStory('${URL.novelUrl}/$ncode');
+      } else {
+        storyData[storyNumber] =
+            await ScrapUtil.getStory('${URL.novelUrl}/$ncode/$storyNumber');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

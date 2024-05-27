@@ -30,8 +30,29 @@ class BookshelfView extends ConsumerWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                     onTap: () {
-                      debugPrint(dataBaseConnectionProviderNotifier
-                          .books[index].title);
+                      final Novel novel = Novel(
+                          ncode: dataBaseConnectionProviderNotifier
+                              .books[index].ncode);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                dataBaseConnectionProviderNotifier
+                                            .books[index].novelType ==
+                                        1
+                                    ? StoryListView(
+                                        ncode:
+                                            dataBaseConnectionProviderNotifier
+                                                .books[index].ncode,
+                                        title:
+                                            dataBaseConnectionProviderNotifier
+                                                .books[index].title)
+                                    : StoryView(
+                                        novelTitle:
+                                            dataBaseConnectionProviderNotifier
+                                                .books[index].title,
+                                        novel: novel,
+                                        index: 0)),
+                      );
                     },
                     title: Text(
                       dataBaseConnectionProviderNotifier.books[index].title,

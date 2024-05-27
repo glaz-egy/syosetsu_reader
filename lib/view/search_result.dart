@@ -36,14 +36,23 @@ class SearchResultView extends ConsumerWidget {
               itemCount: bookList.bookData.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                    onTap: () => {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    StoryListView(
-                                        bookData: bookList.bookData[index])),
-                          ),
-                        },
+                    onTap: () {
+                      final Novel novel =
+                          Novel(ncode: bookList.bookData[index].ncode);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                bookList.bookData[index].novelType == 1
+                                    ? StoryListView(
+                                        ncode: bookList.bookData[index].ncode,
+                                        title: bookList.bookData[index].title)
+                                    : StoryView(
+                                        novelTitle:
+                                            bookList.bookData[index].title,
+                                        novel: novel,
+                                        index: 1)),
+                      );
+                    },
                     title: Text(
                       bookList.bookData[index].outputTitle,
                       style: const TextStyle(
@@ -66,6 +75,7 @@ class SearchResultView extends ConsumerWidget {
           ncode: bookData.ncode,
           title: bookData.title,
           author: bookData.author,
+          novelType: bookData.novelType,
           is_download: false,
           novel_create_date: DateTime.parse(bookData.create_date),
           novel_update_date: DateTime.parse(bookData.update_date),

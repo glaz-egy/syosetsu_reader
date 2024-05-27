@@ -33,6 +33,9 @@ dependencies:
   sqflite:
   path:
   universal_html:
+  flutter_html: 3.0.0-beta.2
+  flutter_linkify:
+  flutter_inappwebview:
 
 
   # The following adds the Cupertino Icons font to your application.

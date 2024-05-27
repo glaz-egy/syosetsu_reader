@@ -4,6 +4,7 @@ class Book {
   final String ncode;
   final String title;
   final String author;
+  final int novelType;
   bool is_download;
   DateTime novel_create_date;
   DateTime novel_update_date;
@@ -15,6 +16,7 @@ class Book {
       required this.ncode,
       required this.title,
       required this.author,
+      required this.novelType,
       required this.is_download,
       required this.novel_create_date,
       required this.novel_update_date,
@@ -27,6 +29,7 @@ class Book {
       'ncode': ncode,
       'title': title,
       'author': author,
+      'novelType': novelType,
       'is_download': is_download,
       'create_date': create_date,
       'update_date': update_date
