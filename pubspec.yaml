@@ -31,11 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite:
+  sqflite_common_ffi:
+  sqlite3_flutter_libs:
+  flutter_inappwebview_macos:
   path:
   universal_html:
   flutter_html: 3.0.0-beta.2
   flutter_linkify:
-  flutter_inappwebview:
+  flutter_inappwebview: ^6.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

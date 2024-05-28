@@ -58,7 +58,8 @@ class SearchResultView extends ConsumerWidget {
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(bookList.bookData[index].author));
+                    subtitle: Text(
+                        '${bookList.bookData[index].author}\n${bookList.bookData[index].end == 0 ? '完結済み' : '連載中'} 全${bookList.bookData[index].storyLength}話'));
               },
             );
           }),

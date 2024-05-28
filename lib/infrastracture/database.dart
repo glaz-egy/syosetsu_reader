@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:syosetsu_reader/model/db_model.dart';
+import 'package:syosetsu_reader/importer.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,6 +54,15 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
             create_date: DateTime.parse(row['create_date']),
             update_date: DateTime.parse(row['update_date'])));
       }
+    }
+  }
+
+  Future<void> updateBookData() async {
+    final List<Map<String, dynamic>> bookTable = await database.query('Book');
+    for (var row in bookTable) {
+      String ncode = row["ncode"];
+      BookData bookData = await APIUtil.getBookData(
+          '${URL.bookUrl}&ncode=${ncode.toLowerCase()}');
     }
   }
 

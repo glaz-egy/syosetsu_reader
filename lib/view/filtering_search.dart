@@ -26,6 +26,9 @@ class SearchFilteringViewState extends ConsumerState<SearchFilteringView> {
     for (var lavel in NarouLavel.values) lavel: false
   };
 
+  String filterOrderValue = FilterOrder.newer.paramCode;
+  double getNovelLength = 100;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,14 +65,42 @@ class SearchFilteringViewState extends ConsumerState<SearchFilteringView> {
                           isExclusionNarouLavel,
                           isSearchNarouLavel,
                           [true, false])),
+                  DropdownButton(
+                    items: FilterOrder.values
+                        .map((order) => DropdownMenuItem(
+                            value: order.paramCode,
+                            child: Text(order.displayName)))
+                        .toList(),
+                    value: filterOrderValue,
+                    onChanged: (String? value) {
+                      setState(() {
+                        filterOrderValue = value!;
+                      });
+                    },
+                  ),
+                  Column(
+                    children: [
+                      Center(child: Text('小説の取得数: ${getNovelLength.round()}')),
+                      Slider(
+                        label: '${getNovelLength.round()}',
+                        value: getNovelLength,
+                        min: 100,
+                        max: 500,
+                        divisions: 40,
+                        onChanged: (value) {
+                          setState(() {
+                            getNovelLength = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                   ElevatedButton.icon(
                     icon: const Icon(
-                      Icons.tag_faces,
+                      Icons.search,
                       color: Colors.black,
                     ),
                     label: const Text('検索'),
-                    style:
-                        ElevatedButton.styleFrom(foregroundColor: Colors.green),
                     onPressed: () {
                       String param = createSearchURI();
                       Navigator.of(context).push(MaterialPageRoute(
@@ -133,6 +164,8 @@ class SearchFilteringViewState extends ConsumerState<SearchFilteringView> {
     List<String> biggenreParam = [];
     List<String> genreParam = [];
 
+    param.add('order=$filterOrderValue');
+    param.add('lim=${getNovelLength.round()}');
     if (wordContainer.searchWord != '') {
       param.add('word=${wordContainer.searchWord}');
     }

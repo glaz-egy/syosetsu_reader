@@ -93,6 +93,32 @@ enum NarouLavel {
   const NarouLavel({required this.displayName, required this.paramCode});
 }
 
+enum FilterOrder {
+  newer(displayName: '新着更新順', paramCode: 'new'),
+  favnovelcnt(displayName: 'ブックマーク数の多い順', paramCode: 'favnovelcnt'),
+  reviewcnt(displayName: '年間ポイントの高い順', paramCode: 'reviewcnt'),
+  hyoka(displayName: '年間ポイントの高い順', paramCode: 'hyoka'),
+  hyokaasc(displayName: '年間ポイントの高い順', paramCode: 'hyokaasc'),
+  dailypoint(displayName: '日間ポイントの高い順', paramCode: 'dailypoint'),
+  weeklypoint(displayName: '週間ポイントの高い順', paramCode: 'weeklypoint'),
+  monthlypoint(displayName: '月間ポイントの高い順', paramCode: 'monthlypoint'),
+  quarterpoint(displayName: '四半期ポイントの高い順', paramCode: 'quarterpoint'),
+  yearlypoint(displayName: '年間ポイントの高い順', paramCode: 'yearlypoint'),
+  impressioncnt(displayName: '感想の多い順', paramCode: 'impressioncnt'),
+  hyokacnt(displayName: '評価者数の多い順', paramCode: 'hyokacnt'),
+  hyokacntasc(displayName: '評価者数の少ない順', paramCode: 'hyokacntasc'),
+  weekly(displayName: '週間ユニークユーザの多い順', paramCode: 'weekly'),
+  lengthdesc(displayName: '作品本文の文字数が多い順', paramCode: 'lengthdesc'),
+  lengthasc(displayName: '作品本文の文字数が少ない順', paramCode: 'lengthasc'),
+  ncodedesc(displayName: '新着投稿順', paramCode: 'ncodedesc'),
+  older(displayName: '新着更新順', paramCode: 'old');
+
+  final String displayName;
+  final String paramCode;
+
+  const FilterOrder({required this.displayName, required this.paramCode});
+}
+
 class ErrorText {
   static String defaultError() {
     return 'エラーが発生しました';

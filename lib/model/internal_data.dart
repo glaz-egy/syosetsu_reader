@@ -31,7 +31,7 @@ class BookListAssignedRanking {
           .forEach((json) => rankList['${json["ncode"]}'] = '${json["rank"]}');
 
       jsonData = await APIUtil.fetchApi(
-          '${URL.bookUrl}&ncode=${ncodeJoin.toLowerCase()}');
+          '${URL.bookUrl}&ncode=${ncodeJoin.toLowerCase()}&lim=300');
       jsonData.removeAt(0);
       jsonData.forEach((json) => bookData.add(BookData.fromJson(
           json, rankList['${json["ncode"].toLowerCase()}']!, true)));
@@ -52,7 +52,7 @@ class BookListAssignedRanking {
       rankData.forEach((rank) => rankList['${rank.ncode}'] = '${rank.rank}');
 
       dynamic jsonData = await APIUtil.fetchApi(
-          '${URL.bookUrl}&ncode=${ncodeJoin.toLowerCase()}');
+          '${URL.bookUrl}&ncode=${ncodeJoin.toLowerCase()}&lim=300');
       jsonData.removeAt(0);
       jsonData.forEach((json) => bookData.add(BookData.fromJson(
           json, rankList['${json["ncode"].toLowerCase()}']!, true)));

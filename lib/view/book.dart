@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -188,6 +189,8 @@ class StoryView extends ConsumerWidget {
                 })
       ];
     }
+    InAppWebViewSettings setting =
+        InAppWebViewSettings(disableVerticalScroll: true);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -209,23 +212,48 @@ class StoryView extends ConsumerWidget {
               return Center(child: Text(ErrorText.defaultError()));
             }
 
-            return InAppWebView(initialData: InAppWebViewInitialData(data: '''
+            return NotificationListener<OverscrollIndicatorNotification>(
+              child: InAppWebView(
+                  onWebViewCreated: (InAppWebViewController webViewController) {
+                    // JavaScriptハンドラを追加
+                    webViewController.addJavaScriptHandler(
+                      handlerName: 'getPageLength',
+                      callback: _getPageLengthHandler,
+                    );
+                  },
+                  onScrollChanged: (controller, x, y) {
+                    debugPrint('(x, y) => ($x, $y)');
+                    if (x < -100) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => StoryView(
+                                novelTitle: novelTitle,
+                                novel: novel,
+                                index: index + 1)),
+                      );
+                    }
+                  },
+                  initialSettings: setting,
+                  initialData: InAppWebViewInitialData(data: '''
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         <style type"text/css">
                         body{
+                          max-height: 100vh;
+                          column-count: 1;
                           margin-right: 10%;
                           margin-left: 10%;
                           direction: rtl;
                           overflow-x: scroll;
-                          overflow-y:auto;
+                          overflow-y: hidden;
+                          writing-mode:tb-rl;
                         }
-                        body *{ font-family: serif; }
+                        body *{ font-family: serif;}
                         p{ margin: 0px; line-height: 2em; }
                         .section{ margin-top: 2em; margin-bottom: 2em;}
                         .author{ text-align:right; }
 
                         .story{
-                          writing-mode:tb-rl;
                           direction:ltr;
                         }
                         </style>
@@ -233,9 +261,43 @@ class StoryView extends ConsumerWidget {
                         <div class="story">
                         ${novel.storyData["${(novel.storyLength == 0 || novel.storyLength == 1) ? index : index + 1}"]!}
                         </div>
-                        </body>'''));
+                        </body>
+                        <script type="text/javascript">
+                          const aryMax = function (a, b) {return Math.max(a, b);}
+                          function getPageLength(){
+                            const pList = document.querySelectorAll('p, div, img, span');
+                            console.log(pList.length);
+                            const heightArray = [];
+                            var count = 0;
+                            for (var i = 0; i < pList.length; i++){
+                                const elementScrollTop = pList[i].clientWidth;
+                                if (elementScrollTop == null) { continue; }
+
+                                if (heightArray.length == 0){
+                                    heightArray.push(elementScrollTop);
+                                }else if (heightArray[count] != elementScrollTop){
+                                    heightArray.push(elementScrollTop);
+                                    count++;
+                                }
+                            }
+                            console.log(heightArray);
+                            window.scrollTo(700, 0);
+                            window.flutter_inappwebview.callHandler("getPageLength", window.innerWidth, Math.max.apply(null, heightArray));
+                          }
+                          getPageLength();
+                        </script>
+                        ''')),
+              onNotification: (notification) {
+                debugPrint('over');
+                return true;
+              },
+            );
           }),
     );
+  }
+
+  _getPageLengthHandler(List<dynamic> args) {
+    debugPrint('handler json data:${args.toString()}');
   }
 
   String htmlToURI(String code) {
