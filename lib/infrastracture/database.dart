@@ -35,6 +35,10 @@ class DatabaseConnection extends AsyncNotifier<List<Map>> {
     }
   }
 
+  bool isExistNcode(String ncode) {
+    return ncodeList.contains(ncode);
+  }
+
   Future<void> getBooks() async {
     if (!state.isLoading) {
       books.clear();

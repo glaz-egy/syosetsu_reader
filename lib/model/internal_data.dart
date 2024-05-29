@@ -93,11 +93,6 @@ class Novel {
     debugPrint(storyNumber);
 
     try {
-      /*final response = await http
-          .get(Uri.parse('${URL.novelUrl}/$ncode/$storyNumber'), headers: {
-        'User-Agent':
-            'Mozilla/5.0 (X11; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0'
-      });*/
       if (storyNumber == '0') {
         storyData['0'] = await ScrapUtil.getStory('${URL.novelUrl}/$ncode');
       } else {

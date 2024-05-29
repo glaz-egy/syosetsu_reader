@@ -47,10 +47,10 @@ class SearchResultView extends ConsumerWidget {
                                         ncode: bookList.bookData[index].ncode,
                                         title: bookList.bookData[index].title)
                                     : StoryView(
-                                        novelTitle:
-                                            bookList.bookData[index].title,
-                                        novel: novel,
-                                        index: 1)),
+                                        bookList.bookData[index].title,
+                                        bookList.bookData[index].novelType,
+                                        0,
+                                        novel)),
                       );
                     },
                     title: Text(

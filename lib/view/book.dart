@@ -1,37 +1,53 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:syosetsu_reader/importer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class StoryListView extends ConsumerWidget {
+class StoryListView extends ConsumerStatefulWidget {
   final String ncode, title;
-  late DatabaseConnection dataBaseConnectionProviderNotifier;
-
   StoryListView({super.key, required this.ncode, required this.title});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    dataBaseConnectionProviderNotifier =
-        ref.watch(databaseConnectionProvider.notifier);
+  StoryListViewState createState() => StoryListViewState();
+}
+
+class StoryListViewState extends ConsumerState<StoryListView> {
+  String ncode = '';
+  String title = '';
+  late DatabaseConnection dbNotifier;
+
+  List<Widget> addBookshelfButton = [];
+
+  @override
+  Widget build(BuildContext context) {
+    ncode = widget.ncode;
+    title = widget.title;
+    dbNotifier = ref.watch(databaseConnectionProvider.notifier);
     Novel novelData = Novel(ncode: ncode);
+    if (!dbNotifier.isExistNcode(ncode)) {
+      setState(() {
+        addBookshelfButton = [
+          ElevatedButton.icon(
+            label: const Text('本棚に追加'),
+            icon: const Icon(Icons.book),
+            onPressed: () {
+              importBook(ncode);
+              setState(() {
+                addBookshelfButton = [];
+              });
+            },
+          ),
+        ];
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         title: Text(title),
       ),
-      persistentFooterButtons:
-          dataBaseConnectionProviderNotifier.ncodeList.contains(ncode)
-              ? []
-              : [
-                  ElevatedButton.icon(
-                    label: const Text('本棚に追加'),
-                    icon: const Icon(Icons.book),
-                    onPressed: () => importBook(ncode),
-                  ),
-                ],
+      persistentFooterButtons: addBookshelfButton,
       body: FutureBuilder(
           future: novelData.getNovelTop(),
           builder: (ctx, snapshot) {
@@ -53,10 +69,8 @@ class StoryListView extends ConsumerWidget {
                       debugPrint(novelData.storyListData[index].title);
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (BuildContext context) => StoryView(
-                                novelTitle: title,
-                                novel: novelData,
-                                index: index)),
+                            builder: (BuildContext context) =>
+                                StoryView(title, 1, index, novelData)),
                       );
                     },
                     title: Text(
@@ -74,7 +88,7 @@ class StoryListView extends ConsumerWidget {
     BookData bookData = await APIUtil.getBookData(
         '${URL.bookUrl}&ncode=${ncode.toLowerCase()}');
 
-    List<String> existNcode = dataBaseConnectionProviderNotifier.ncodeList;
+    List<String> existNcode = dbNotifier.ncodeList;
     debugPrint(existNcode.contains(bookData.ncode).toString());
     if (!existNcode.contains(bookData.ncode)) {
       DateTime now = DateTime.now();
@@ -89,106 +103,99 @@ class StoryListView extends ConsumerWidget {
           novel_update_date: DateTime.parse(bookData.update_date),
           create_date: now,
           update_date: now);
-      dataBaseConnectionProviderNotifier.insertBook(book);
+      dbNotifier.insertBook(book);
     }
   }
 }
 
-class StoryView extends ConsumerWidget {
+class StoryView extends ConsumerStatefulWidget {
   final String novelTitle;
   final Novel novel;
+  final int novelType;
   final int index;
-  late DatabaseConnection dataBaseConnectionProviderNotifier;
-
-  StoryView(
-      {super.key,
-      required this.novelTitle,
-      required this.novel,
-      required this.index});
+  StoryView(this.novelTitle, this.novelType, this.index, this.novel,
+      {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    dataBaseConnectionProviderNotifier =
-        ref.watch(databaseConnectionProvider.notifier);
+  StoryViewState createState() => StoryViewState();
+}
+
+class StoryViewState extends ConsumerState<StoryView> {
+  String novelTitle = '';
+  late Novel novel;
+  int novelType = 0;
+  int index = 0;
+  String title = '';
+
+  late DatabaseConnection dbNotifier;
+  List<Widget> bottomButton = [];
+
+  @override
+  Widget build(BuildContext context) {
+    novelTitle = widget.novelTitle;
+    novel = widget.novel;
+    novelType = widget.novelType;
+    index = widget.index;
+
+    dbNotifier = ref.watch(databaseConnectionProvider.notifier);
     debugPrint('index: $index, storyLength: ${novel.storyLength}');
-    List<Widget> bottomButton = [];
-    String title = '';
-    if (novel.storyLength == 0 || novel.storyLength == 1) {
+
+    Widget previousStoryButton = ElevatedButton.icon(
+        label: const Text('前話へ'),
+        icon: const Icon(Icons.arrow_left),
+        onPressed: () => {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          StoryView(novelTitle, 2, index - 1, novel)))
+            });
+    Widget nextStoryButton = ElevatedButton.icon(
+        label: const Text('次話へ'),
+        icon: const Icon(Icons.arrow_right),
+        iconAlignment: IconAlignment.end,
+        onPressed: () => {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          StoryView(novelTitle, 2, index + 1, novel)))
+            });
+
+    if (novelType == 2) {
       title = novelTitle;
     } else {
       title = novel.storyListData[index].title;
     }
-    if (novel.storyLength == 0 || novel.storyLength == 1) {
-      bottomButton =
-          dataBaseConnectionProviderNotifier.ncodeList.contains(novel.ncode)
-              ? []
-              : [
-                  ElevatedButton.icon(
-                    label: const Text('本棚に追加'),
-                    icon: const Icon(Icons.book),
-                    onPressed: () => importBook(novel.ncode),
-                  ),
-                ];
-    } else if (index == 0) {
-      bottomButton = [
-        ElevatedButton.icon(
-          label: const Text('次話へ'),
-          icon: const Icon(Icons.arrow_right),
-          iconAlignment: IconAlignment.end,
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => StoryView(
-                      novelTitle: novelTitle, novel: novel, index: index + 1)),
+    if (novelType == 2) {
+      if (!dbNotifier.isExistNcode(novel.ncode)) {
+        setState(() {
+          bottomButton = [
+            ElevatedButton.icon(
+              label: const Text('本棚に追加'),
+              icon: const Icon(Icons.book),
+              onPressed: () {
+                importBook(novel.ncode);
+                setState(() {
+                  bottomButton = [];
+                });
+              },
             ),
-          },
-        )
-      ];
-    } else if (novel.storyLength > (index + 1)) {
-      bottomButton = [
-        ElevatedButton.icon(
-            label: const Text('前話へ'),
-            icon: const Icon(Icons.arrow_left),
-            onPressed: () => {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => StoryView(
-                              novelTitle: novelTitle,
-                              novel: novel,
-                              index: index - 1))),
-                }),
-        ElevatedButton.icon(
-          label: const Text('次話へ'),
-          icon: const Icon(Icons.arrow_right),
-          iconAlignment: IconAlignment.end,
-          onPressed: () => {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => StoryView(
-                      novelTitle: novelTitle, novel: novel, index: index + 1)),
-            ),
-          },
-        )
-      ];
+          ];
+        });
+      }
     } else {
-      bottomButton = [
-        ElevatedButton.icon(
-            label: const Text('前話へ'),
-            icon: const Icon(Icons.arrow_left),
-            onPressed: () => {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => StoryView(
-                              novelTitle: novelTitle,
-                              novel: novel,
-                              index: index - 1))),
-                })
-      ];
+      setState(() {
+        if (index == 0) {
+          bottomButton = [nextStoryButton];
+        } else if (novel.storyLength > (index + 1)) {
+          bottomButton = [previousStoryButton, nextStoryButton];
+        } else {
+          bottomButton = [previousStoryButton];
+        }
+      });
     }
+
     InAppWebViewSettings setting =
         InAppWebViewSettings(disableVerticalScroll: true);
     return Scaffold(
@@ -223,16 +230,6 @@ class StoryView extends ConsumerWidget {
                   },
                   onScrollChanged: (controller, x, y) {
                     debugPrint('(x, y) => ($x, $y)');
-                    if (x < -100) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => StoryView(
-                                novelTitle: novelTitle,
-                                novel: novel,
-                                index: index + 1)),
-                      );
-                    }
                   },
                   initialSettings: setting,
                   initialData: InAppWebViewInitialData(data: '''
@@ -310,7 +307,7 @@ class StoryView extends ConsumerWidget {
     BookData bookData = await APIUtil.getBookData(
         '${URL.bookUrl}&ncode=${ncode.toLowerCase()}');
 
-    List<String> existNcode = dataBaseConnectionProviderNotifier.ncodeList;
+    List<String> existNcode = dbNotifier.ncodeList;
     debugPrint(existNcode.contains(bookData.ncode).toString());
     if (!existNcode.contains(bookData.ncode)) {
       DateTime now = DateTime.now();
@@ -325,7 +322,7 @@ class StoryView extends ConsumerWidget {
           novel_update_date: DateTime.parse(bookData.update_date),
           create_date: now,
           update_date: now);
-      dataBaseConnectionProviderNotifier.insertBook(book);
+      dbNotifier.insertBook(book);
     }
   }
 }

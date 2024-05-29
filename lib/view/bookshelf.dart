@@ -9,11 +9,10 @@ class BookshelfView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataBaseConnectionProviderNotifier =
-        ref.watch(databaseConnectionProvider.notifier);
+    final dbNotifier = ref.watch(databaseConnectionProvider.notifier);
     return Scaffold(
       body: FutureBuilder(
-          future: dataBaseConnectionProviderNotifier.getBooks(),
+          future: dbNotifier.getBooks(),
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -26,41 +25,33 @@ class BookshelfView extends ConsumerWidget {
               return Center(child: Text(ErrorText.defaultError()));
             }
             return ListView.builder(
-              itemCount: dataBaseConnectionProviderNotifier.books.length,
+              itemCount: dbNotifier.books.length,
               itemBuilder: (context, index) {
                 return ListTile(
                     onTap: () {
-                      final Novel novel = Novel(
-                          ncode: dataBaseConnectionProviderNotifier
-                              .books[index].ncode);
+                      final Novel novel =
+                          Novel(ncode: dbNotifier.books[index].ncode);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                dataBaseConnectionProviderNotifier
-                                            .books[index].novelType ==
-                                        1
+                                dbNotifier.books[index].novelType == 1
                                     ? StoryListView(
-                                        ncode:
-                                            dataBaseConnectionProviderNotifier
-                                                .books[index].ncode,
-                                        title:
-                                            dataBaseConnectionProviderNotifier
-                                                .books[index].title)
+                                        ncode: dbNotifier.books[index].ncode,
+                                        title: dbNotifier.books[index].title)
                                     : StoryView(
-                                        novelTitle:
-                                            dataBaseConnectionProviderNotifier
-                                                .books[index].title,
-                                        novel: novel,
-                                        index: 0)),
+                                        dbNotifier.books[index].title,
+                                        dbNotifier.books[index].novelType,
+                                        0,
+                                        novel)),
                       );
                     },
                     title: Text(
-                      dataBaseConnectionProviderNotifier.books[index].title,
+                      dbNotifier.books[index].title,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                        '${dataBaseConnectionProviderNotifier.books[index].author} 更新日:${DateFormat('yyyy年MM月dd日').format(dataBaseConnectionProviderNotifier.books[index].novel_update_date)}'));
+                        '${dbNotifier.books[index].author} 更新日:${DateFormat('yyyy年MM月dd日').format(dbNotifier.books[index].novel_update_date)}'));
               },
             );
           }),
